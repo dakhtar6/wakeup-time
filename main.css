@@ -1,0 +1,111 @@
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	background:#ccc;
+}
+
+.container {
+	background:white;
+	margin:50px auto;
+	padding: 100px;
+	width: 900px;
+	height: 500px;
+}
+
+.outerShell {
+	background: gray;
+	margin: auto;
+	padding: 25px;
+	height:300px;
+	width:500px;
+	border-radius:10px;
+	box-shadow: 10px 10px 5px #aaa;
+}
+
+.innerShell {
+	background:black;
+	margin: auto;
+	padding: 10px;
+	height:250px;
+	width:400px;
+	border-radius:10px;
+}
+
+.leftLabels {
+	float:left;
+	height:150px;
+	width:80px;
+	text-align:right;
+	color:white;
+	padding-right: 10px;
+}
+
+.leftLabelAMPM {
+	line-height: 130px;
+	height:130px;
+}
+
+.clockScreen {
+	float:right;
+	padding: 10px;
+	background:#4f0000;
+	/*text-align:center;*/
+	/*vertical-align:bottom;*/
+	color:red;
+	/*height:150px;*/
+	width:300px;
+	border-radius: 10px;
+	/*font-size:800%;*/
+}
+
+.clockScreenLeft {
+	float:left;
+	height:150px;
+	width:50px;
+}
+
+.clockScreenLeftAMPM {
+	line-height: 120px;
+	height:120px;
+	visibility:hidden;
+}
+
+.clockScreenLeftAuto {
+	/*visibility:hidden;*/
+}
+
+
+.clockScreenTime {
+	float:right;
+	height:130px;
+	/*border:2px solid pink;*/
+	margin:10px;
+}
+
+.clockScreenTime h1 {
+	font-size:5rem;
+}
+
+.bottomLabels {
+	clear:both;
+	color:white;
+	height:55px;
+	width:380px;
+	padding:10px;
+}
+
+.bottomLabelEmpty {
+	width:20px;
+	height:50px;
+	float:left;
+}
+
+.bottomLabelFrequency {
+	float:right;
+	width:330px;
+	height:50px;
+}
