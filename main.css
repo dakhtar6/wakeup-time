@@ -1,111 +1,63 @@
 * {
-	box-sizing: border-box;
+	box-sizing:border-box;
 	margin: 0;
 	padding: 0;
 }
 
-body {
-	background:#ccc;
-}
-
-.container {
-	background:white;
-	margin:50px auto;
-	padding: 100px;
-	width: 900px;
+/*************************************/
+.outershell {
+	background: #ccc;
+	width: 500px;
 	height: 500px;
+	position: relative;
 }
 
-.outerShell {
-	background: gray;
-	margin: auto;
-	padding: 25px;
-	height:300px;
-	width:500px;
-	border-radius:10px;
-	box-shadow: 10px 10px 5px #aaa;
+/*************************************/
+.innershell {
+	background: #000;
+	width: 450px;
+	height: 250px;
+	position: absolute;
+	top: 25px;
+	left: 25px;
 }
 
-.innerShell {
-	background:black;
+.clockscreen {
+	background: red;
+	margin: 25px auto;
+	width: 300px;
+	height: 130px;
+
+	text-align:center;
+	line-height: 150px;		
+	color:white;
+	
+}
+
+.clocktimeformat {
+	font-size: 250%;
+}
+
+/*************************************/
+.btnalarm {
+	background: white;
+	width: 100px;
+	height: 50px;
+}
+
+/*************************************/
+.formalarmdiv {
+	position:absolute;
 	margin: auto;
 	padding: 10px;
-	height:250px;
-	width:400px;
-	border-radius:10px;
-}
-
-.leftLabels {
-	float:left;
-	height:150px;
-	width:80px;
-	text-align:right;
-	color:white;
-	padding-right: 10px;
-}
-
-.leftLabelAMPM {
-	line-height: 130px;
-	height:130px;
-}
-
-.clockScreen {
-	float:right;
+	top: 300px;
+	left: 100px;
+	height: 100px;
+	width: 220px;
+	background: #000;
+	text-align:center;
 	padding: 10px;
-	background:#4f0000;
-	/*text-align:center;*/
-	/*vertical-align:bottom;*/
-	color:red;
-	/*height:150px;*/
-	width:300px;
-	border-radius: 10px;
-	/*font-size:800%;*/
+	color: white;
 }
 
-.clockScreenLeft {
-	float:left;
-	height:150px;
-	width:50px;
-}
-
-.clockScreenLeftAMPM {
-	line-height: 120px;
-	height:120px;
-	visibility:hidden;
-}
-
-.clockScreenLeftAuto {
-	/*visibility:hidden;*/
-}
-
-
-.clockScreenTime {
-	float:right;
-	height:130px;
-	/*border:2px solid pink;*/
-	margin:10px;
-}
-
-.clockScreenTime h1 {
-	font-size:5rem;
-}
-
-.bottomLabels {
-	clear:both;
-	color:white;
-	height:55px;
-	width:380px;
-	padding:10px;
-}
-
-.bottomLabelEmpty {
-	width:20px;
-	height:50px;
-	float:left;
-}
-
-.bottomLabelFrequency {
-	float:right;
-	width:330px;
-	height:50px;
-}
+/*************************************/

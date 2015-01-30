@@ -1,120 +1,162 @@
-// Project: Wakeup Time
-// Open Date: 01/27
-// Objective: Render a clock using jQuery DOM creation
+// create a clock
+var alarmTime = "-0:-0";
 
-// Requirements
-// 1. Create a blank HTML document with only a container div in the body.
-// 2. Include the latest version of jQuery.
-// 3. Include your own js file.
-// 4. When the document is ready, create DOM elements for each of the following components to approximate the clock pictured above:
-        // Outer Shell (dark gray)
-        // Inner Shell (black)
-        // Left AM/PM & Auto Labels (white)
-        // Clock Screen (dark red)
-        // Clock AM/PM indicator (red)
-        // Clock Text (red)
-        // Bottom AM Label & Frequencies (white)
-        // Bottom FM Label & Frequencies (white)
-// 5. Create each component individually
-// 6. Use append or other DOM manipulation methods to add the elements to the DOM.
-// 7. Style the elements appropriately using an external CSS file.
-// 8. Make the clock functional!
+//========================================================
+// function: acquireTime
+// parameter: none
+// return: a string with current time
+// description: acquire date and time via Date object 
+//     and return current time
+//========================================================
+function acquireTime()
+{
+    var currentTime = new Date();
 
-// Version 1.00
-// Date: 01/27
+    var hr = currentTime.getHours();
+    var min = currentTime.getMinutes();
+    var sec = currentTime.getSeconds();
+    
+    hr = appendZero(hr);
+    min = appendZero(min);
+ 
+    return hr + ":" + min;
+}
+
+//========================================================
+// function: appendZero
+// parameter: hour | minute | second
+// return: a string with 0 in front of a digit
+// description: + 0 in front of hour/min/sec if less than 0 
+//========================================================
+function appendZero(num)
+{
+    if (num < 10) 
+        num = "0" + num
+    
+    return num;
+}
+
+//========================================================
+// function: clockUI
+// parameter: none
+// return: none
+// description: create elements on fly with jquery
+//========================================================
+function clockUI() {
+    
+
+    // Clock    
+    var clockTimeFormat = $('<div>')
+        .addClass('clocktimeformat')
+        .text(acquireTime());
+
+    var clockScreen = $('<div>')
+        .addClass('clockscreen')
+        .append(clockTimeFormat);
+
+    // Alarm Button
+    var btnAlarm = $('<button>')
+        .addClass("btnalarm")
+        .text("Alarm");
+
+    var btnAlarmCenter = $('<p align="center">').
+        append(btnAlarm);
+    
+    // inner box = clock and alarm button
+    var innerShell = $('<div>')
+        .addClass('innershell')
+        .append(clockScreen)
+        .append(btnAlarmCenter);
+
+    //============================================
+    // Form
+    var createAlarmForm = $('<form>')
+        .addClass('formalarm')
+        .html(
+            "<table> \
+            <tr> \
+            <td>Hour:</td> \
+            <td><input id='hrvalue' type='text' /></td>\
+            </tr>\
+            <tr>\
+            <td>Minutes:</td>\
+            <td><input id='minvalue' type='text' /><td>\
+            </tr>\
+            <tr>\
+            <td colspan='2'>\
+            <input type='submit' value='set'>\
+            </td>\
+            </tr>\
+            </table>"
+            );
+
+    var createAlarmFormDiv = $('<div>') 
+        .addClass('formalarmdiv')
+        .append(createAlarmForm)
+        .hide();
+
+    //============================================
+    var outerShell = $('<div>')
+        .addClass('outershell')
+        .append(innerShell)
+        .append(createAlarmFormDiv);
+
+
+    $('body').append(outerShell)
+}
+
+//========================================================
+// function: clockTimeUpate
+// parameter: none
+// return: none
+// description: update the time on screen and check alarm
+//========================================================
+function clockAlarmCheck() {
+
+    setInterval(function(){
+        var currentTime = acquireTime();
+        $('.clocktimeformat').text(currentTime);
+        if (currentTime === alarmTime) {
+            $('.btnalarm').text("Alarm");
+            var playMusic = new Audio('dogbark.wav');
+            playMusic.play();
+        }
+
+    }, 1000);   
+}
+
+//========================================================
+// function: showAlarm
+// parameter: none
+// return: none
+// description: show the form, when submit button is clicked, 
+//      take hour and minute inputs and save to global variable
+//      hide the form and change the button text to alarm on
+//========================================================
+function showAlarm() {
+    // display the alarm form
+    $('.formalarmdiv').show();    
+    $('.formalarm').on('submit', function(e) {  
+        e.preventDefault();
+
+        var hr = $('#hrvalue').val();
+        var min = $('#minvalue').val();
+        alarmTime = hr +":" + min;
+        
+        $('.formalarmdiv').hide();
+        $('.btnalarm').text("Alarm ON");
+    });
+}
+
 $(document).on('ready', function() {
     
-    //=======================//
-    // create all components //
-    //=======================//
-
-
-    var outerShell = $('<div>')
-        .addClass('outerShell');
+    //load UI
+    clockUI(); 
+ 
+    //update
+    clockAlarmCheck();
     
-        var innerShell = $('<div>')
-            .addClass('innerShell');
-
-            // Left Labels
-            // leftLabels includes leftLabelAMPM and leftLabelAuto
-            var leftLabels = $('<div>')
-                .addClass('leftLabels');
-                    
-                var leftLabelAMPM = $('<div>')
-                    .addClass("leftLabelAMPM")
-                    .text("PM");
-
-                var leftLabelAuto = $('<div>')  
-                    .text("AUTO");
-
-    
-            // Clock Screen
-            // clockScreen includes 
-            // clockScreenLeft(clockScreenLeftAMPM and clockScreenLeftAuto) 
-            // and clockScreenTime shows the current time   
-            var clockScreen = $('<div>')
-                .addClass('clockScreen');
-
-                var clockScreenLeft = $('<div>')
-                    .addClass('clockScreenLeft');
-                            
-                    var clockScreenLeftAMPM = $('<div>')
-                        .addClass('clockScreenLeftAMPM')
-                        .html('<img src="circleRed.png" width="20px" height=20px />');
-
-                    var clockScreenLeftAuto = $('<div>')
-                        .addClass('clockScreenLeftAuto')
-                        .html('<img src="circleRed.png" width="20px" height="20px"/>');
-                        
-                var clockScreenTime = $('<div class="clockScreenTime">')
-                        .html('<h1>11:11</h1>');    
-
-            // AM & FM Frequency Labels
-            // frequency labels includes an empty box and AM & FM frequencies in tables
-            var bottomLabels = $('<div>')
-                .addClass("bottomLabels");
-
-                var bottomLabelEmpty = $('<div>')
-                    .addClass("bottomLabelEmpty");
-
-                var bottomLabelFrequency = $('<div>')
-                    .addClass("bottomLabelFrequency");
-
-                    var frequencyAM = $('<div><table width="100%"><tr><td>AM</td><td>53</td><td>60</td><td>70</td><td>90</td><td>110</td><td>140</td><td>170</td><td>KHz</td></tr></table>');
-
-                    var frequencyFM = $('<div><table width="100%"><tr><td>FM</td><td>88</td><td>92</td><td>96</td><td>100</td><td>104</td><td>108</td><td>MHz</td></tr></table>');
-
-    // append all components in html page
-    $('.container')
-        .append(outerShell);
-        
-        $('.outerShell')        
-            .append(innerShell);
-        
-            $('.innerShell')        
-                .append(leftLabels)
-                .append(clockScreen)
-                .append(bottomLabels);
-        
-                $('.leftLabels')
-                    .append(leftLabelAMPM)
-                    .append(leftLabelAuto);
-        
-
-                $('.clockScreen')
-                    .append(clockScreenLeft)
-                    .append(clockScreenTime);   
-
-                    $('.clockScreenLeft')
-                        .append(clockScreenLeftAMPM)
-                        .append(clockScreenLeftAuto);   
-
-                $('.bottomLabels')
-                    .append(bottomLabelEmpty)
-                    .append(bottomLabelFrequency);
-        
-                    $('.bottomLabelFrequency')
-                        .append(frequencyAM)
-                        .append(frequencyFM);           
-    
+    // set the alarm by calling showAlarm
+    $('.btnalarm').on('click', showAlarm);
 });
+
