@@ -28,6 +28,17 @@ var appendZeroFront = function (data)
 }
 
 //========================================================
+// function: shortTimeFormat
+// description: create HH:MM AM/PM
+//========================================================
+var shortTimeFormat = function(data) {
+    var strData = 
+        data.slice(0,5) +
+        data.slice(8,11);
+    return strData;   
+}
+
+//========================================================
 // function: clockUI
 // description: create elements on fly with jquery
 //========================================================
@@ -115,16 +126,8 @@ var timeUpdate = function (){
 var verifyAlarm = function(strAlarm) {
     setInterval(function() {     
         
-        var strCurrentTime = acquireTime();
-        var strCurrentTimeCompare = 
-                strCurrentTime.slice(0,5) +
-                strCurrentTime.slice(8,11);
-        console.log(strCurrentTimeCompare);
-        var strAlarmCompare = 
-                strAlarm.slice(0,5) +  
-                strAlarm.slice(8,11);
         var playMusic = new Audio('dogbark.wav');    
-        if (strCurrentTimeCompare === strAlarmCompare) {
+        if (shortTimeFormat(acquireTime()) === shortTimeFormat(strAlarm)) {
             $('.btnalarm').text("Alarm");
             playMusic.play();
         }
