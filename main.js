@@ -1,63 +1,51 @@
-// create a clock
-var alarmTime = "-0:-0";
+
+//========================================================
+// wakeup project
+//========================================================
 
 //========================================================
 // function: acquireTime
-// parameter: none
-// return: a string with current time
 // description: acquire date and time via Date object 
 //     and return current time
 //========================================================
-function acquireTime()
-{
-    var currentTime = new Date();
-
-    var hr = currentTime.getHours();
-    var min = currentTime.getMinutes();
-    var sec = currentTime.getSeconds();
+var acquireTime = function () {
     
-    hr = appendZero(hr);
-    min = appendZero(min);
- 
-    return hr + ":" + min;
+    var currentTime = new Date();
+    // verify the time format
+    var strCurrentTime = currentTime.toLocaleTimeString();
+    if (strCurrentTime.length < 11)
+        strCurrentTime = appendZeroFront(strCurrentTime);
+    return strCurrentTime;
 }
 
 //========================================================
-// function: appendZero
-// parameter: hour | minute | second
-// return: a string with 0 in front of a digit
-// description: + 0 in front of hour/min/sec if less than 0 
+// function: appendZeroFront
+// description: + 0 in front of a data
 //========================================================
-function appendZero(num)
+var appendZeroFront = function (data)
 {
-    if (num < 10) 
-        num = "0" + num
-    
-    return num;
+    return "0" + data;
 }
 
 //========================================================
 // function: clockUI
-// parameter: none
-// return: none
 // description: create elements on fly with jquery
 //========================================================
-function clockUI() {
-    
+var clockUI = function (strTime) {
 
-    // Clock    
+    // clock    
     var clockTimeFormat = $('<div>')
         .addClass('clocktimeformat')
-        .text(acquireTime());
+        .text(strTime);
 
     var clockScreen = $('<div>')
         .addClass('clockscreen')
         .append(clockTimeFormat);
 
-    // Alarm Button
+    // alarm button
     var btnAlarm = $('<button>')
         .addClass("btnalarm")
-        .text("Alarm");
+        .text("Alarm"); //.text("Alarm OFF")
 
     var btnAlarmCenter = $('<p align="center">').
         append(btnAlarm);
@@ -69,7 +57,7 @@ function clockUI() {
         .append(btnAlarmCenter);
 
     //============================================
-    // Form
+    // form
     var createAlarmForm = $('<form>')
         .addClass('formalarm')
         .html(
@@ -81,6 +69,10 @@ function clockUI() {
             <tr>\
             <td>Minutes:</td>\
             <td><input id='minvalue' type='text' /><td>\
+            </tr>\
+            <tr>\
+            <td>AM/PM:</td>\
+            <td><input id='ampmvalue' type='text' /><td>\
             </tr>\
             <tr>\
             <td colspan='2'>\
@@ -106,57 +98,74 @@ function clockUI() {
 }
 
 //========================================================
-// function: clockTimeUpate
-// parameter: none
-// return: none
-// description: update the time on screen and check alarm
+// function: timeUpdate
+// description: update the time on screen
 //========================================================
-function clockAlarmCheck() {
+var timeUpdate = function (){
 
     setInterval(function(){
-        var currentTime = acquireTime();
-        $('.clocktimeformat').text(currentTime);
-        if (currentTime === alarmTime) {
-            $('.btnalarm').text("Alarm");
-            var playMusic = new Audio('dogbark.wav');
-            playMusic.play();
-        }
-
+        $('.clocktimeformat').text(acquireTime());
     }, 1000);   
 }
 
 //========================================================
-// function: showAlarm
-// parameter: none
-// return: none
-// description: show the form, when submit button is clicked, 
-//      take hour and minute inputs and save to global variable
-//      hide the form and change the button text to alarm on
+// function: verify Alarm
+// description: compare current time vs. alarm time
 //========================================================
-function showAlarm() {
-    // display the alarm form
+var verifyAlarm = function(strAlarm) {
+    setInterval(function() {     
+        
+        var strCurrentTime = acquireTime();
+        var strCurrentTimeCompare = 
+                strCurrentTime.slice(0,5) +
+                strCurrentTime.slice(8,11);
+        console.log(strCurrentTimeCompare);
+        var strAlarmCompare = 
+                strAlarm.slice(0,5) +  
+                strAlarm.slice(8,11);
+        var playMusic = new Audio('dogbark.wav');    
+        if (strCurrentTimeCompare === strAlarmCompare) {
+            $('.btnalarm').text("Alarm");
+            playMusic.play();
+        }
+    }, 1000);    
+}
+
+//========================================================
+// function: showAlarm
+// description: set alarm time
+//========================================================
+var setAlarm = function () {
     $('.formalarmdiv').show();    
+    
     $('.formalarm').on('submit', function(e) {  
         e.preventDefault();
 
-        var hr = $('#hrvalue').val();
+        var hr = $('#hrvalue').val(); 
+        if (hr.length!=2) 
+            hr = appendZeroFront(hr);
         var min = $('#minvalue').val();
-        alarmTime = hr +":" + min;
+        if (min.length!=2) 
+            min=appendZeroFront(min);
+        var sec = "00";
+        var ampm = $('#ampmvalue').val().toUpperCase();
+        var strAlarm = hr + ":" + min + ":" + sec + " " + ampm;
         
+        $('.btnalarm').text("Alarm Set @ " + strAlarm);
         $('.formalarmdiv').hide();
-        $('.btnalarm').text("Alarm ON");
+
+        verifyAlarm(strAlarm)
     });
 }
 
 $(document).on('ready', function() {
-    
     //load UI
-    clockUI(); 
+    clockUI(acquireTime()); 
  
-    //update
-    clockAlarmCheck();
+    //update time
+    timeUpdate();
     
-    // set the alarm by calling showAlarm
-    $('.btnalarm').on('click', showAlarm);
+    // set the alarm
+    $('.btnalarm').on('click', setAlarm);
 });
 
